@@ -1,10 +1,8 @@
 ---
 deployment:
   tasks:
-    - /bin/echo "Installing admin portal production dependencies"
-    - cd /home/hlyjphxp/nodeapps/rfcity-admin/admin-portal && /home/hlyjphxp/nodevenv/nodeapps/rfcity-admin/22/bin/npm ci
-    - /bin/echo "Building Next.js admin portal"
-    - cd /home/hlyjphxp/nodeapps/rfcity-admin/admin-portal && NODE_ENV=production NODE_OPTIONS="--max-old-space-size=3072" TURBOPACK=0 /home/hlyjphxp/nodevenv/nodeapps/rfcity-admin/22/bin/npm run build
-    - /bin/echo "Touching Passenger restart file"
+    - /bin/echo "Installing admin portal runtime dependencies only"
+    - cd /home/hlyjphxp/nodeapps/rfcity-admin/admin-portal && /home/hlyjphxp/nodevenv/nodeapps/rfcity-admin/22/bin/npm ci --omit=dev
+    - /bin/echo "Restarting Passenger"
     - cd /home/hlyjphxp/nodeapps/rfcity-admin/admin-portal && mkdir -p tmp && touch tmp/restart.txt
 
