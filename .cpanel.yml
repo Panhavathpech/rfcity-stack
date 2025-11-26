@@ -1,0 +1,10 @@
+---
+deployment:
+  tasks:
+    - /bin/echo "Installing admin portal production dependencies"
+    - cd admin-portal && npm ci --omit=dev
+    - /bin/echo "Building Next.js admin portal"
+    - cd admin-portal && npm run build
+    - /bin/echo "Touching Passenger restart file"
+    - cd admin-portal && mkdir -p tmp && touch tmp/restart.txt
+

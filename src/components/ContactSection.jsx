@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import contactPrimary from '../assets/contact/contact-1.png';
 import contactSecondary from '../assets/contact/contact-2.png';
 
@@ -21,9 +21,54 @@ const infoBlocks = [
   },
 ];
 
+const CONTACT_API_BASE = (import.meta.env.VITE_CONTACT_API || '/api').replace(/\/$/, '');
+const CONTACT_ENDPOINT = `${CONTACT_API_BASE}/contact`;
+
+const initialFormState = {
+  fullName: '',
+  email: '',
+  phone: '',
+  message: '',
+};
+
 const ContactSection = () => {
-  const handleSubmit = (event) => {
+  const [formState, setFormState] = useState(initialFormState);
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [error, setError] = useState('');
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setStatus('loading');
+    setError('');
+
+    try {
+      const response = await fetch(CONTACT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: formState.fullName,
+          email: formState.email,
+          phone: formState.phone,
+          message: formState.message,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.message || 'Unable to send message');
+      }
+
+      setFormState(initialFormState);
+      setStatus('success');
+    } catch (err) {
+      setStatus('error');
+      setError(err.message || 'Something went wrong. Please try again.');
+    }
   };
 
   return (
@@ -51,6 +96,8 @@ const ContactSection = () => {
                   type={type}
                   name={name}
                   placeholder={placeholder}
+                  value={formState[name]}
+                  onChange={handleChange}
                   className="mt-2 w-full border-0 border-b border-slate-300 bg-transparent pb-2 pt-1 text-base text-slate-900 placeholder-slate-400 focus:border-emerald-800 focus:outline-none focus:ring-0"
                 />
               </label>
@@ -62,15 +109,27 @@ const ContactSection = () => {
                 name="message"
                 rows="4"
                 placeholder="Tell us what you'd like to know..."
+                value={formState.message}
+                onChange={handleChange}
                 className="mt-2 w-full resize-none border-0 border-b border-slate-300 bg-transparent pb-2 pt-1 text-base text-slate-900 placeholder-slate-400 focus:border-emerald-800 focus:outline-none focus:ring-0"
               />
             </label>
 
+            {status === 'success' && (
+              <p className="text-sm text-emerald-700">
+                Thanks for reaching out! Our team will respond shortly.
+              </p>
+            )}
+            {status === 'error' && (
+              <p className="text-sm text-red-600">{error}</p>
+            )}
+
             <button
               type="submit"
+              disabled={status === 'loading'}
               className="inline-flex items-center justify-center rounded-full border border-emerald-950 px-8 py-3 text-sm font-semibold uppercase tracking-[0.3em] text-emerald-950 transition hover:bg-emerald-950 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-800/70"
             >
-              Send Message
+              {status === 'loading' ? 'Sending...' : 'Send Message'}
             </button>
           </form>
         </div>

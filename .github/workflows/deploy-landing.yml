@@ -1,0 +1,45 @@
+name: Deploy Landing
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-upload:
+    name: Build Vite site and sync to A2 Hosting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Upload dist/ to A2 Hosting over FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.RFCITY_FTP_HOST }}
+          username: ${{ secrets.RFCITY_FTP_USER }}
+          password: ${{ secrets.RFCITY_FTP_PASS }}
+          port: ${{ secrets.RFCITY_FTP_PORT }}
+          protocol: ftps
+          server-dir: /public_html/rfcity
+          local-dir: dist
+          state-name: .ftp-deploy-sync-state-rfcity.json
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+

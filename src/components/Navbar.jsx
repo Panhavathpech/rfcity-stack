@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import logo from '../assets/logo/rf-city-whitelogo.png';
 
+const showAdminLink = import.meta.env.VITE_SHOW_ADMIN_LINK === 'true';
+const adminPortalUrl = import.meta.env.VITE_ADMIN_PORTAL_URL || 'https://admin.example.com';
+
 const Navbar = () => {
     const [isHidden, setIsHidden] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -84,6 +87,17 @@ const Navbar = () => {
                         <ChevronDown size={12} />
                     </div>
 
+                    {showAdminLink && (
+                        <a
+                            href={adminPortalUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="hidden lg:inline-flex items-center rounded-md border border-white/30 px-4 py-1.5 text-xs font-bold tracking-wide text-white transition hover:border-emerald-300 hover:text-emerald-200"
+                        >
+                            ADMIN PORTAL
+                        </a>
+                    )}
+
                     {/* Contact Button */}
                     <a href="#ContactSection" className="bg-white text-slate-900 px-4 py-1.5 rounded-md text-xs font-bold hover:bg-[#273D39] hover:text-white transition-all duration-300 shadow-lg tracking-wide">
                         CONTACT US
@@ -122,6 +136,17 @@ const Navbar = () => {
                         >
                             CONTACT US
                         </a>
+                        {showAdminLink && (
+                            <a
+                                href={adminPortalUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-5 py-3 text-center font-semibold text-emerald-200 hover:bg-white/5 transition-colors"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                ADMIN PORTAL
+                            </a>
+                        )}
                     </div>
                 </div>
             </nav>
