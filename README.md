@@ -93,13 +93,14 @@ npm run dev
 
 1. In cPanel open **Git Version Control**, click **Create**, and point the repository URL to this repo. Set the deployment path to the Node app root (e.g., `/home/hlyjphxp/nodeapps/rfcity-admin`).
 2. In **Setup Node.js App** configure the app root to the same path and choose Node 20+. Passenger will now watch the repo directory.
-3. Enable **Deploy HEAD** in the cPanel Git UI (or use the generated `post-receive` hook). Every push will now clone the latest commit into the deployment path.
-4. The `.cpanel.yml` file added in this commit runs automatically after each deploy and:
+3. Set the startup file to `server.js` (located at the repo root). It boots the Next.js app from the `admin-portal` directory using Passenger.
+4. Enable **Deploy HEAD** in the cPanel Git UI (or use the generated `post-receive` hook). Every push will now clone the latest commit into the deployment path.
+5. The `.cpanel.yml` file added in this commit runs automatically after each deploy and:
    - Installs production dependencies with `npm ci --omit=dev`
    - Builds the Next.js app
    - Touches `tmp/restart.txt` so Passenger restarts the process
-5. Set the required environment variables for the Node app via the cPanel interface (`NEXTAUTH_URL=https://admin.rfcity.twd.digital`, InstantDB credentials, Resend keys, etc.).
-6. Push to `main` whenever you need to release admin changes—cPanel handles the rest.
+6. Set the required environment variables for the Node app via the cPanel interface (`NEXTAUTH_URL=https://admin.rfcity.twd.digital`, InstantDB credentials, Resend keys, etc.).
+7. Push to `main` whenever you need to release admin changes—cPanel handles the rest.
 
 ## Admin portal workflows
 
