@@ -35,8 +35,8 @@ jobs:
           password: ${{ secrets.RFCITY_FTP_PASS }}
           port: ${{ secrets.RFCITY_FTP_PORT }}
           protocol: ftps
-          server-dir: /public_html/rfcity
-          local-dir: dist
+          server-dir: /public_html/rfcity/
+          local-dir: dist/
           state-name: .ftp-deploy-sync-state-rfcity.json
           exclude: |
             **/.git*
