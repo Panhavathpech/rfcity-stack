@@ -1,0 +1,96 @@
+========================================
+COPY THESE EXACT VALUES TO VERCEL
+========================================
+
+Go to: https://vercel.com/dashboard
+Click: rfcity-stack project
+Click: Settings → Environment Variables
+
+Add each of these (click "Add New" for each one):
+
+1. INSTANT_APP_ID
+   Value: 420f2b79-a635-476c-8d53-0bf7461303fd
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+2. INSTANT_ADMIN_TOKEN
+   Value: bd435aaf-8d2d-4253-8e2a-16b0b340e484
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+3. RESEND_API_KEY
+   Value: re_MwX7iYue_C7CtvBW4X9hKbsD7cTo5dttU
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+4. CONTACT_ALERT_RECIPIENT
+   Value: panhavath012@gmail.com
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+5. SUPPORT_FROM_EMAIL
+   Value: twddeveloper23@gmail.com
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+6. NEXTAUTH_SECRET
+   Value: 31DLn/ci6+dHFOPMpNFUXxe/aL0LpCtCPdFH4gYFbho=
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+7. NEXTAUTH_URL ⚠️ IMPORTANT - USE VERCEL URL, NOT LOCALHOST!
+   Value: https://rfcity-stack.vercel.app
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+8. PASSWORD_PEPPER
+   Value: jYr9thf4IqHh1V1K5mrTb20D505lAEIUImRUE7b4ENk=
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+9. CONTACT_ALLOWED_ORIGIN
+   Value: https://rfcity.twd.digital
+   Environment: ✓ Production ✓ Preview ✓ Development
+
+10. SITE_BASE_URL
+    Value: https://rfcity-stack.vercel.app
+    Environment: ✓ Production ✓ Preview ✓ Development
+
+========================================
+AFTER ADDING ALL 10 VARIABLES:
+========================================
+
+1. Go to Deployments tab
+2. Click ⋯ on latest deployment
+3. Click "Redeploy"
+4. UNCHECK "Use existing Build Cache"
+5. Click "Redeploy"
+6. Wait 2-3 minutes
+
+========================================
+THEN TEST:
+========================================
+
+Admin Login:
+→ https://rfcity-stack.vercel.app
+→ Login with your credentials
+→ Should work! ✅
+
+Contact Form:
+→ First add GitHub secrets (see below)
+→ Then test at https://rfcity.twd.digital
+
+========================================
+ALSO ADD GITHUB SECRETS:
+========================================
+
+Go to: https://github.com/Panhavathpech/rfcity-stack/settings/secrets/actions
+
+Add these 3 secrets:
+
+1. VITE_CONTACT_API
+   Value: https://rfcity-stack.vercel.app/api
+
+2. VITE_SHOW_ADMIN_LINK
+   Value: false
+
+3. VITE_ADMIN_PORTAL_URL
+   Value: https://rfcity-stack.vercel.app
+
+Then manually trigger deployment:
+→ https://github.com/Panhavathpech/rfcity-stack/actions
+→ Click "Deploy Landing"
+→ Click "Run workflow"
+
