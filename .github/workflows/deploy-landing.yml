@@ -25,6 +25,10 @@ jobs:
         run: npm ci
 
       - name: Build production bundle
+        env:
+          VITE_CONTACT_API: ${{ secrets.VITE_CONTACT_API }}
+          VITE_SHOW_ADMIN_LINK: ${{ secrets.VITE_SHOW_ADMIN_LINK }}
+          VITE_ADMIN_PORTAL_URL: ${{ secrets.VITE_ADMIN_PORTAL_URL }}
         run: npm run build
 
       - name: Upload dist/ to A2 Hosting over FTP
