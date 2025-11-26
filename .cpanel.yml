@@ -2,9 +2,9 @@
 deployment:
   tasks:
     - /bin/echo "Installing admin portal production dependencies"
-    - cd admin-portal && npm ci --omit=dev
+    - source /opt/cpanel/ea-nodejs22/bin/nodevenv /home/hlyjphxp/nodeapps/rfcity-admin 22 && cd /home/hlyjphxp/nodeapps/rfcity-admin/admin-portal && npm ci --omit=dev
     - /bin/echo "Building Next.js admin portal"
-    - cd admin-portal && npm run build
+    - source /opt/cpanel/ea-nodejs22/bin/nodevenv /home/hlyjphxp/nodeapps/rfcity-admin 22 && cd /home/hlyjphxp/nodeapps/rfcity-admin/admin-portal && npm run build
     - /bin/echo "Touching Passenger restart file"
-    - cd admin-portal && mkdir -p tmp && touch tmp/restart.txt
+    - cd /home/hlyjphxp/nodeapps/rfcity-admin/admin-portal && mkdir -p tmp && touch tmp/restart.txt
 
