@@ -1,26 +1,21 @@
 const { createServer } = require("http");
-const { parse } = require("url");
-const next = require("next");
 
-const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
 const port = parseInt(process.env.PORT || process.env.APP_PORT || "3000", 10);
 
-const app = next({ dev, hostname, port, dir: __dirname });
-const handle = app.getRequestHandler();
+// Next.js standalone server
+process.chdir(__dirname);
+const NextServer = require("./.next/standalone/admin-portal/server.js");
 
-app.prepare().then(() => {
-  createServer(async (req, res) => {
-    try {
-      const parsedUrl = parse(req.url, true);
-      await handle(req, res, parsedUrl);
-    } catch (err) {
-      console.error("Error handling request", err);
-      res.statusCode = 500;
-      res.end("Internal Server Error");
-    }
-  }).listen(port, (err) => {
-    if (err) throw err;
-    console.log(`> RF City admin ready on http://${hostname}:${port}`);
-  });
+createServer(async (req, res) => {
+  try {
+    return NextServer.default(req, res);
+  } catch (err) {
+    console.error("Error occurred handling", req.url, err);
+    res.statusCode = 500;
+    res.end("Internal server error");
+  }
+}).listen(port, (err) => {
+  if (err) throw err;
+  console.log(`> RF City admin ready on http://${hostname}:${port}`);
 });
