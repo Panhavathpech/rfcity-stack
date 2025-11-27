@@ -58,13 +58,13 @@ const Navbar = () => {
 
     return (
         <div
-            className={`fixed top-6 left-0 right-0 z-50 px-2 sm:px-4 transform-gpu will-change-transform will-change-opacity transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.26,0.08,0.25,1)] ${
+            className={`fixed top-6 left-0 right-0 z-50 px-2 sm:px-4 transform-gpu will-change-transform will-change-opacity transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.26,0.08,0.25,1)] ${
                 isHidden
-                    ? '-translate-y-32 opacity-0 scale-95 blur-sm pointer-events-none'
-                    : 'translate-y-0 opacity-100 scale-100 blur-0'
+                    ? '-translate-y-32 opacity-0 scale-95 pointer-events-none'
+                    : 'translate-y-0 opacity-100 scale-100'
             }`}
         >
-            <nav className="relative flex items-center justify-between w-full px-5 sm:px-6 py-3 bg-[#0f172a]/30 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-white/10">
+            <nav className="relative flex items-center justify-between w-full px-5 sm:px-6 py-3 bg-slate-900/20 backdrop-blur-lg backdrop-saturate-150 text-white rounded-2xl shadow-2xl border border-white/20">
                 {/* Logo */}
                 <a href="#top" className="flex items-center" aria-label="Back to top">
                     <img src={logo} alt="R&F City" className="h-8 w-auto" />
