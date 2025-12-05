@@ -37,7 +37,7 @@ const WhyChooseSection = () => {
 
     return (
         <section id="WhyChooseSection" className="bg-white py-16 md:py-24">
-            <div className="mx-auto w-full max-w-[108rem] px-4 sm:px-8 lg:px-12 2xl:px-16">
+            <div className="mx-auto w-full px-4 sm:px-8 lg:px-12 2xl:px-16">
                 <div className="text-center mb-12">
                     <div className="inline-block bg-emerald-900 text-white px-10 py-3">
                         <h2 className="text-lg md:text-xl tracking-[0.3em] font-medium">

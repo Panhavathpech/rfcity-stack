@@ -21,3 +21,5 @@ export async function getOptionalUser() {
   return session?.user ?? null;
 }
 
+
+

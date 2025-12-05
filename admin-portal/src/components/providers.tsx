@@ -7,3 +7,5 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return <SessionProvider>{children}</SessionProvider>;
 }
 
+
+
