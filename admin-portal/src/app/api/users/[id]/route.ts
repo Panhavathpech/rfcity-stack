@@ -1,20 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import {
-  archiveUser,
-  getUserById,
-  updateUser,
-} from "@/lib/instantdb";
+import { archiveUser, getUserById, updateUser } from "@/lib/instantdb";
 import { userUpdateSchema } from "@/lib/validation";
-import { passwordResetTemplate } from "@/lib/emailTemplates";
-import { sendEmail } from "@/lib/mailer";
-import { env } from "@/lib/env";
-import { hash } from "bcryptjs";
-
-async function hashPassword(password: string) {
-  return hash(`${password}${env.PASSWORD_PEPPER}`, 10);
-}
+import { issuePasswordReset } from "@/lib/passwordReset";
 
 export async function PATCH(
   request: NextRequest,
@@ -44,6 +33,12 @@ export async function PATCH(
     if (!targetUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
+    if (targetUser.status === "disabled") {
+      return NextResponse.json(
+        { message: "User is disabled" },
+        { status: 400 },
+      );
+    }
 
     if (
       session.user.role !== "owner" &&
@@ -63,36 +58,31 @@ export async function PATCH(
     if (parsed.data.status) {
       updates.status = parsed.data.status;
     }
-    let tempPassword: string | undefined;
-    if (parsed.data.password) {
-      tempPassword = parsed.data.password;
-      updates.passwordHash = await hashPassword(parsed.data.password);
-    }
+    const wantsPasswordReset = Boolean(parsed.data.password);
 
-    if (Object.keys(updates).length === 0) {
+    if (
+      Object.keys(updates).length === 0 &&
+      !wantsPasswordReset
+    ) {
       return NextResponse.json(
         { message: "No updates supplied" },
         { status: 400 },
       );
     }
 
-    await updateUser(id, updates);
-
-    if (tempPassword) {
-      const template = passwordResetTemplate({
-        email: targetUser.email,
-        tempPassword,
-        loginUrl: `${env.SITE_BASE_URL}/login`,
-      });
-      await sendEmail({
-        to: targetUser.email,
-        subject: template.subject,
-        html: template.html,
-        text: template.text,
-      });
+    if (Object.keys(updates).length > 0) {
+      await updateUser(id, updates);
     }
 
-    return NextResponse.json({ message: "User updated" });
+    if (wantsPasswordReset) {
+      // Generate a reset link instead of directly setting a temp password.
+      await issuePasswordReset(id, targetUser.email);
+    }
+
+    return NextResponse.json({
+      message: "User updated",
+      ...(wantsPasswordReset ? { reset: true } : {}),
+    });
   } catch (error) {
     console.error("users:PATCH", error);
     return NextResponse.json(
@@ -123,4 +113,3 @@ export async function DELETE(
     );
   }
 }
-

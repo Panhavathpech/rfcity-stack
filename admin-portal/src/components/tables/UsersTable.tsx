@@ -55,9 +55,18 @@ export function UsersTable({ initialUsers, viewerRole }: Props) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+    const body = (await response.json().catch(() => null)) as
+      | { message?: string; tempPassword?: string }
+      | null;
     if (!response.ok) {
-      alert("Unable to update user. Check your permissions and try again.");
+      alert(
+        body?.message ??
+          "Unable to update user. Check your permissions and try again.",
+      );
       return;
+    }
+    if (payload.password && body?.reset) {
+      alert("Password reset link sent to the user.");
     }
     const data = await fetch("/api/users").then((res) => res.json());
     setUsers(data.users);
@@ -236,7 +245,8 @@ export function UsersTable({ initialUsers, viewerRole }: Props) {
 
 function generatePassword() {
   const cryptoApi = globalThis.crypto;
-  const buf = cryptoApi.getRandomValues(new Uint8Array(6));
-  return Array.from(buf, (byte) => (byte % 36).toString(36)).join("");
+  const alphabet =
+    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+  const buf = cryptoApi.getRandomValues(new Uint8Array(12));
+  return Array.from(buf, (byte) => alphabet[byte % alphabet.length]).join("");
 }
-

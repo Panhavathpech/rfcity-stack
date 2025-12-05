@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -60,6 +61,14 @@ export function LoginForm() {
           placeholder="••••••••"
           required
         />
+        <div className="mt-2 text-right">
+          <Link
+            href="/forgot-password"
+            className="text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+          >
+            Forgot password?
+          </Link>
+        </div>
       </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <button
@@ -72,6 +81,5 @@ export function LoginForm() {
     </form>
   );
 }
-
 
 

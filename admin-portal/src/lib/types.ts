@@ -22,6 +22,15 @@ export type AdminUserRecord = {
   createdAt: string;
 };
 
+export type PasswordResetRecord = {
+  id: string;
+  userId: string;
+  tokenHash: string;
+  expiresAt: string;
+  usedAt?: string | null;
+  createdAt: string;
+};
+
 export type ContentBlock = {
   id: string;
   slug: string;
@@ -31,6 +40,5 @@ export type ContentBlock = {
   status: "draft" | "published";
   updatedAt: string;
 };
-
 
 

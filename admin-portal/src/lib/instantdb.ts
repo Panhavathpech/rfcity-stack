@@ -5,6 +5,7 @@ import {
   ContactInput,
   ContactRecord,
   ContentBlock,
+  PasswordResetRecord,
   UserRole,
   UserStatus,
 } from "@/lib/types";
@@ -150,6 +151,59 @@ export async function archiveUser(userId: string): Promise<void> {
   );
 }
 
+export async function createPasswordResetToken(
+  userId: string,
+  tokenHash: string,
+  expiresAt: string,
+): Promise<PasswordResetRecord> {
+  const resetId = id();
+  const createdAt = new Date().toISOString();
+
+  await db.transact(
+    db.tx.password_resets[resetId].update({
+      userId,
+      tokenHash,
+      expiresAt,
+      usedAt: null,
+      createdAt,
+    }),
+  );
+
+  return {
+    id: resetId,
+    userId,
+    tokenHash,
+    expiresAt,
+    usedAt: null,
+    createdAt,
+  };
+}
+
+export async function findPasswordResetByTokenHash(
+  tokenHash: string,
+): Promise<PasswordResetRecord | null> {
+  const result = await db.query({
+    password_resets: {
+      $: {
+        where: { tokenHash },
+        limit: 1,
+      },
+    },
+  });
+
+  const [record] = (result.password_resets as PasswordResetRecord[]) ?? [];
+  return record ?? null;
+}
+
+export async function markPasswordResetUsed(resetId: string): Promise<void> {
+  const usedAt = new Date().toISOString();
+  await db.transact(
+    db.tx.password_resets[resetId].update({
+      usedAt,
+    }),
+  );
+}
+
 export async function listContentBlocks(): Promise<ContentBlock[]> {
   const result = await db.query({
     content_blocks: {
@@ -162,4 +216,3 @@ export async function listContentBlocks(): Promise<ContentBlock[]> {
 
   return (result.content_blocks as ContentBlock[]) ?? [];
 }
-

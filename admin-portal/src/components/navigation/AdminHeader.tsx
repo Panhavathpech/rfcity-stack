@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { Menu, LogOut, ChevronDown, X } from "lucide-react";
 import { useState } from "react";
+import { UserRole } from "@/lib/types";
 
 type AdminHeaderProps = {
   user: {
@@ -13,16 +14,26 @@ type AdminHeaderProps = {
   };
 };
 
-const links = [
-  { href: "/contacts", label: "Contacts" },
-  { href: "/users", label: "Users" },
-  { href: "/content", label: "Content" },
+type NavLink = {
+  href: string;
+  label: string;
+  allowedRoles?: UserRole[];
+};
+
+const links: NavLink[] = [
+  { href: "/contacts", label: "Contacts", allowedRoles: ["owner", "admin", "editor"] },
+  { href: "/users", label: "Users", allowedRoles: ["owner", "admin"] },
+  { href: "/content", label: "Content", allowedRoles: ["owner", "admin", "editor"] },
 ];
 
 export function AdminHeader({ user }: AdminHeaderProps) {
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const visibleLinks = links.filter(
+    (link) =>
+      !link.allowedRoles || link.allowedRoles.includes(user.role as UserRole),
+  );
 
   return (
     <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
@@ -32,7 +43,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
             R&F City Admin
           </span>
           <nav className="hidden gap-6 text-sm font-semibold text-slate-500 md:flex">
-            {links.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -85,7 +96,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
       {mobileNavOpen ? (
         <div className="border-t border-slate-200 bg-white px-6 py-4 md:hidden">
           <nav className="flex flex-col gap-3 text-sm font-semibold text-slate-600">
-            {links.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -112,4 +123,3 @@ export function AdminHeader({ user }: AdminHeaderProps) {
     </header>
   );
 }
-

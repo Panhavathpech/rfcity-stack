@@ -81,5 +81,29 @@ export function passwordResetTemplate({
   return { subject, html, text };
 }
 
+export function passwordResetLinkTemplate({
+  email,
+  resetUrl,
+}: {
+  email: string;
+  resetUrl: string;
+}) {
+  const subject = "Reset your R&F City admin password";
+  const html = `
+    <p>Hello ${email},</p>
+    <p>A password reset was requested for your R&F City admin account.</p>
+    <p><a href="${resetUrl}">Click here to set a new password</a>. This link expires in 60 minutes.</p>
+    <p>If you didn't request this, you can ignore this email.</p>
+  `;
+
+  const text = [
+    "A password reset was requested for your R&F City admin account.",
+    `Set a new password: ${resetUrl}`,
+    "This link expires in 60 minutes.",
+    "If you didn't request this, you can ignore this email.",
+  ].join("\n");
+
+  return { subject, html, text };
+}
 
 
